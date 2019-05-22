@@ -5,17 +5,16 @@ const Discord = require('discord.js'),
 	fs = require('fs');
 
 const configPath = path.join(__dirname, '../../config.json'),
-	cachePath = path.join(__dirname, 'cache.json'),
+	cachePath = path.join(__dirname, '../../cache.json'),
 	trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops'],
-	NOTFOUND_MSG = "Could not find information for that tracker. Please try again.");
-
-const config = require(configPath);
+	NOTFOUND_MSG = "Could not find information for that tracker. Please try again.";
 
 const trackerFunc = tracker => (client, message, args) => {
 	const { channel } = message;
 	const { user: { username, avatarURL } } = client;
 
-	const cache = require(cachePath);
+	const cache = require(cachePath),
+		config = require(configPath);
 
 	if(config.botBroadcastChannelID) {
 		if(!channel.id === config.botBroadcastChannelID) {

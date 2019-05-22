@@ -1,7 +1,7 @@
 const Discord = require('discord.js'),
 	utils = require('../utils.js');
 
-const serviceTypes = ['Website','TrackerHTTP','IRCServer','IRCTorrentAnnouncer'],
+const serviceTypes = ['Website','TrackerHTTP','IRCServer','IRCTorrentAnnouncer'];
 
 module.exports = trackerStatusInfo => {
 	const { trackerName, Description, Details } = trackerStatusInfo;

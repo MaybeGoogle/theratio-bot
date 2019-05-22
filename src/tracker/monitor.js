@@ -2,15 +2,16 @@ const request = require('request'),
 	path = require('path'),
 	fs = require('fs');
 
-const cachePath = path.join(__dirname, 'cache.json');
-
 const monitor = () => {
-	const previousCache = require(cachePath);
+	const cachePath = path.join(__dirname, '../../cache.json'),
+		cache = require(cachePath);
 
 	request({ url: 'https://trackerstatus.info/api/list/', json: true }, (err, res, json) => {
 		if (err) return;
 
-		fs.writeFileSync(cachePath, JSON.stringify(json, null ' '), { encoding: 'utf8' });
+		if(!json) return;
+
+		fs.writeFileSync(cachePath, JSON.stringify(json), { encoding: 'utf8' });
 	});
 };
 
