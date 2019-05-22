@@ -1,10 +1,17 @@
-const request = require('request');
+const Discord = require('discord.js'),
+	request = require('request');
 
-const trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops'];
+const capitaliseFirst = string => string.charAt(0).toUpperCase() + string.slice(1);
+
+const trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops'],
+	serviceTypes = ['Website','TrackerHTTP','IRCServer','IRCTorrentAnnouncer'];
 
 const trackerFunc = tracker => (client, message, args) => {
 	const { channel } = message;
 	const { user: { username, avatarURL } } = client;
+
+	const sosEmoji = client.emojis.find(emoji => emoji.name === "sos"),
+		checkEmoji = client.emojis.find(emoji => emoji.name === "white_check_mark");
 
 	request({ url: 'https://trackerstatus.info/api/list/', json: true }, (err, res, json) => {
 		if(err) {
@@ -14,31 +21,34 @@ const trackerFunc = tracker => (client, message, args) => {
 
 		const trackerStatus = json[tracker];
 
-		if(!trackerStatus) {
+		if(!trackerStatus || !trackerStatus['Details']) {
 			channel.send("Could not find information for that tracker in trackerstatus.info's API. Please try again.");
 			return;
 		}
 
-		const services = trackerStatus.Services;
+		const embed = new Discord.RichEmbed()
+			.setColor(3447003)
+			.setTitle(`Tracker service status for ${tracker.toUpperCase()}`)
+			.setDescription(capitaliseFirst(trackerStatus.Description))
 
-		const embed = {
-			color: 3447003,
-			author: {
-				name: username,
-				icon_url: avatarURL
-			},
-			title: `Tracker service status for ${tracker.toUpperCase()}`,
-			fields: [],
-			timestamp: new Date(),
-		};
+		serviceTypes.forEach(service => {
+			let value;
+			const statusCode = trackerStatus.Details[service];
 
-		for (let name in services) {
-			const value = services[name];
+			console.log(statusCode);
+
+			if(statusCode === "0") {
+				value = "Offline";
+			} else if (statusCode === "1") {
+				value = "Online";
+			} else if (statusCode === "2") {
+				value = "Unstable";
+			}
 			
-			embed.fields.push({ name, value });
-		}
+			embed.addField(service, value, true);
+		});
 
-		channel.send({ embed });
+		channel.send(embed);
 	});
 };
 
