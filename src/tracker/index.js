@@ -30,13 +30,10 @@ const trackerFunc = tracker => (client, message, args) => {
 			timestamp: new Date(),
 		};
 
-		for (let service in services) {
-			const serviceValue = services[service];
+		for (let name in services) {
+			const value = services[name];
 			
-			embed.fields.push({
-				name: service,
-				value: serviceValue
-			});
+			embed.fields.push({ name, value });
 		}
 
 		channel.send({ embed });
