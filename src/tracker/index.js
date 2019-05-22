@@ -1,3 +1,5 @@
+const request = require('request');
+
 const trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops'];
 
 const trackerFunc = tracker => (client, message, args) => {
@@ -25,7 +27,7 @@ const trackerFunc = tracker => (client, message, args) => {
 				name: username,
 				icon_url: avatarURL
 			},
-			title: `Tracker service status for ${tracker.toUpperCase()}`
+			title: `Tracker service status for ${tracker.toUpperCase()}`,
 			fields: [],
 			timestamp: new Date(),
 		};
@@ -44,6 +46,6 @@ module.exports = client => {
 	
 	trackers.forEach(tracker => {
 		client.commands[tracker + '-status'] = trackerFunc(tracker);
-	};
+	});
 
 };

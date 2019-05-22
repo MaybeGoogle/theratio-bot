@@ -1,7 +1,10 @@
-const fs = require('fs');
+const fs = require('fs'),
+	TrackerCommands = require('./tracker/index.js');
 
 module.exports = client => {
 	client.commands = new Object();
+
+	TrackerCommands(client);
 
 	fs.readdir('./src/events', (err, files) => {
 		if (err) return console.log(err);
