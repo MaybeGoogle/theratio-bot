@@ -16,7 +16,5 @@ module.exports = (client, message) => {
 	
 	if(handler) {
 		handler(client, message, args);
-	} else {
-		channel.send('Error: Command not found');
 	}
 };
