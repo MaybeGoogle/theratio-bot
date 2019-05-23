@@ -1,7 +1,5 @@
-const TrackerCommands = require("./commands.js"),
-	TrackerMonitor = require("./monitor.js");
+const TrackerMonitor = require("./monitor.js");
 
 module.exports = client => {
-	TrackerCommands(client);
 	TrackerMonitor(client);
 };

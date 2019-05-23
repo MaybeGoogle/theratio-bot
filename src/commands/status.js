@@ -1,29 +1,35 @@
 const Discord = require('discord.js'),
-	generateEmbed = require('./generateTrackerEmbed.js'),
+	generateEmbed = require('../tracker/generateTrackerEmbed.js'),
 	request = require('request'),
 	path = require('path'),
 	fs = require('fs');
 
 const configPath = path.join(__dirname, '../../config.json'),
 	cachePath = path.join(__dirname, '../../cache.json'),
-	trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops'],
 	NOTFOUND_MSG = "Could not find information for that tracker. Please try again.";
 
-const trackerFunc = tracker => (client, message, args) => {
-	const { channel } = message;
+module.exports = (client, message, args) => {
+	const { channel } = message,
+		tracker = args[0];
+
 	const { user: { username, avatarURL } } = client;
 
 	const cache = require(cachePath),
 		config = require(configPath);
 
 	if(config.botBroadcastChannelID) {
-		if(!channel.id === config.botBroadcastChannelID) {
+		if(channel.id !== config.botBroadcastChannelID) {
 			return;
 		}
 	}
 
 	if(!cache){
 		channel.send(NOTFOUND_MSG);
+		return;
+	}
+
+	if(tracker == "ipt") {
+		channel.send("Donate to get access to IPT status.");
 		return;
 	}
 
@@ -36,13 +42,7 @@ const trackerFunc = tracker => (client, message, args) => {
 
 	trackerStatus.trackerName = tracker;
 
-	const embed = generateEmbed(trackerStatusInfo);
+	const embed = generateEmbed(client, trackerStatus);
 
 	channel.send(embed);
-};
-
-module.exports = client => {
-	trackers.forEach(tracker => {
-		client.commands[tracker + '-status'] = trackerFunc(tracker);
-	});
 };

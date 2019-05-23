@@ -1,17 +1,27 @@
 const Discord = require('discord.js'),
-	utils = require('../utils.js');
+	_ = require('lodash');
 
-const serviceTypes = ['Website','TrackerHTTP','IRCServer','IRCTorrentAnnouncer'];
+module.exports = (client, trackerStatusInfo) => {
+	const { hasChanged, trackerName, Description, Details, URL } = trackerStatusInfo;
+	const title = hasChanged ? `Tracker service status for ${trackerName.toUpperCase()} has changed:` : `Tracker service status for ${trackerName.toUpperCase()}`;
 
-module.exports = trackerStatusInfo => {
-	const { trackerName, Description, Details } = trackerStatusInfo;
+	const guild = client.guilds.first(),
+		role = guild.roles.get('name', trackerName + '-notify');
 
 	const embed = new Discord.RichEmbed()
 		.setColor(3447003)
-		.setTitle(`Tracker service status for ${trackerName.toUpperCase()}`)
-		.setDescription(utils.capitaliseFirst(Description))
+		.setTitle(title)
+		.setDescription(_.capitalize(Description))
+		.setURL(URL);
 
-	serviceTypes.forEach(service => {
+	if(hasChanged && role) {
+		embed
+			.addBlankField(true)
+			.addField(" ", "Paging " + role.toString())
+			.addBlankField(true);
+	}
+
+	for(let service in Details) {
 		let value;
 		const statusCode = Details[service];
 
@@ -22,9 +32,9 @@ module.exports = trackerStatusInfo => {
 		} else if (statusCode === "2") {
 			value = "Unstable";
 		}
-		
+
 		embed.addField(service, value, true);
-	});
+	}
 
 	return embed;
 };
