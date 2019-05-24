@@ -3,7 +3,7 @@ const Discord = require('discord.js'),
 
 module.exports = (client, trackerStatusInfo) => {
 	const { hasChanged, trackerName, Description, Details, URL } = trackerStatusInfo;
-	const title = hasChanged ? `Tracker service status for ${trackerName.toUpperCase()} has changed:` : `Tracker service status for ${trackerName.toUpperCase()}`;
+	const title = hasChanged ? `Service status for ${trackerName.toUpperCase()} has changed:` : `Service status for ${trackerName.toUpperCase()}`;
 
 	const guild = client.guilds.first(),
 		role = guild.roles.get('name', trackerName + '-notify');

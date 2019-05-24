@@ -1,5 +1,5 @@
 const Discord = require('discord.js'),
-	generateEmbed = require('../tracker/generateTrackerEmbed.js'),
+	generateTrackerEmbed = require('../tracker/generateTrackerEmbed.js'),
 	request = require('request'),
 	path = require('path'),
 	fs = require('fs');
@@ -29,7 +29,7 @@ module.exports = (client, message, args) => {
 	}
 
 	if(tracker == "ipt") {
-		channel.send("Donate to get access to IPT status.");
+		channel.send("Please donate to get access to IPT status.");
 		return;
 	}
 
@@ -42,7 +42,7 @@ module.exports = (client, message, args) => {
 
 	trackerStatus.trackerName = tracker;
 
-	const embed = generateEmbed(client, trackerStatus);
+	const embed = generateTrackerEmbed(client, trackerStatus);
 
 	channel.send(embed);
 };

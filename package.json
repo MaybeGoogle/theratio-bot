@@ -6,11 +6,12 @@
   "dependencies": {
     "discord.js": "^11.4.2",
     "lodash": "^4.17.11",
+    "pm2": "^3.5.1",
     "request": "^2.88.0"
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node index.js"
+    "start": "pm2 start index.js"
   },
   "author": "",
   "license": "ISC"
