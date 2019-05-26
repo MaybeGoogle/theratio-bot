@@ -1,4 +1,5 @@
 const Discord = require('discord.js'),
+	utils = require('../utils.js'),
 	path = require('path'),
 	fs = require('fs');
 
@@ -21,9 +22,11 @@ const generateEmbedFields = () => trackers.map((tracker, index) => {
 });
 
 module.exports = (client, message, args) => {
-	const { channel } = message;
+	const { channel } = message,
+		config = utils.requireUncached(require, configPath),
+		isAdmin = message.member.hasPermission('ADMINISTRATOR');
 
-	const config = require(configPath);
+	if(!isAdmin) return;
 
 	if(!config.botNotificationRoleChannelID) {
 		channel.send('Bot notification channel ID not set');
@@ -50,12 +53,15 @@ module.exports = (client, message, args) => {
 		embed.addField(field.trackerName, field.reaction, true);
 	}
 
-	channel.send(embed).then(async message => {
+	channel.send(embed).then(async sentMessage => {
+		message.delete();
+
 		for(const reaction of reactions) {
-			await message.react(reaction);
+			await sentMessage.react(reaction);
 		}
 
-		config.botNotificationRoleMessageID = message.id;
+		config.botNotificationRoleMessageID = sentMessage.id;
+		config.botNotificationGuildID = sentMessage.guild.id;
 
 		fs.writeFileSync(configPath, JSON.stringify(config), { encoding: 'utf8' });
 	});

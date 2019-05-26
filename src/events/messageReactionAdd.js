@@ -1,28 +1,31 @@
 const path = require('path'),
 	fs = require('fs'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	utils = require('../utils.js');
 
 const configPath = path.join(__dirname, '../../config.json');
 
-const trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops'],
-	roles = ['ar-notify','btn-notify','ggn-notify','mtv','nwcd','ptp','red','32p','ops'],
-	reactions = ['one','two','three','four','five','six','seven','eight','nine'];
+const roles = ['ar-notify','btn-notify','ggn-notify','mtv-notify','nwcd-notify','ptp-notify','red-notify','32p-notify','ops-notify'],
+	reactions = ['1⃣','2⃣','3⃣','4⃣','5⃣','6⃣','7⃣','8⃣','9⃣'];
 
-module.exports = (reaction, user) => {
+module.exports = (thing, reaction, user) => {
+	const { message } = reaction;
+
 	if(user.bot) return;	
 
-	return;
+	if(!message || !message.guild) return;
 
-	if(!reaction.message.channel.guild) return;
+	const config = utils.requireUncached(require, configPath);
 
-	const config = require(configPath);
-
-	if(reaction.message.id !== config.botNotificationRoleMessageID) return;
+	if(message.id !== config.botNotificationRoleMessageID) return;
 
 	reactions.forEach((reactionName, index) => {
-		if(!reaction.emoji.name !== reactionName) return;
+		if(reaction.emoji.name != reactionName) return;
 
-		const role = reaction.message.guild.roles.find(r => r.name === roles[index]);
-		reaction.message.guild.member(user).addRole(role);
+		const role = message.guild.roles.find(r => r.name === roles[index]);
+
+		if(role) {
+			message.guild.member(user).addRole(role);
+		}
 	});
 };

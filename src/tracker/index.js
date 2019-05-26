@@ -1,18 +1,18 @@
 const request = require('request'),
 	generateEmbed = require('./generateTrackerEmbed.js'),
+	utils = require('../utils.js'),
 	path = require('path'),
 	fs = require('fs'),
 	_ = require('lodash'),
-	utils = require('../utils.js');
-
-const configPath = path.join(__dirname, '../../config.json'),
+	configPath = path.join(__dirname, '../../config.json'),
 	cachePath = path.join(__dirname, '../../cache.json');
 
 const monitor = client => {
-	const config = require(configPath),
-		previousCache = require(cachePath);
-
 	request({ url: 'https://trackerstatus.info/api/list/', json: true }, (err, res, json) => {
+		const config = utils.requireUncached(require, configPath),
+			previousCache = utils.requireUncached(require, cachePath),
+			channel = client.channels.get(config.botNotificationBroadcastChannelID);
+
 		if(err) return;
 
 		if(!json) return;
@@ -23,18 +23,17 @@ const monitor = client => {
 
 			if(!tracker || !cachedTrackerInfo) return;
 
-			const differences = _.difference(trackerInfo.Details, cachedTrackerInfo.Details);
-
-			if(differences.length) {
+			if(!_.isEqual(trackerInfo.Details, cachedTrackerInfo.Details)) {
 				const embedInfo = _.clone(trackerInfo);
-				embedInfo.hasChanged = true;
-				embedInfo.trackerName = tracker;
 
-				if(config.botBroadcastChannelID) {
-					const channel = client.channels.get(config.botBroadcastChannelID),
-						embed = generateEmbed(client, embedInfo);
+				if(channel) {
+					const guild = client.guilds.get(config.botNotificationGuildID),
+						role = guild.roles.find(role => role.name == tracker + '-notify'),
+						embed = generateEmbed(client, tracker, true, embedInfo);
 
-					channel.send(embed);
+					channel.send(`**Paging** ${role.toString()}`, {
+						embed	
+					});
 				}
 			}
 		});
@@ -44,6 +43,6 @@ const monitor = client => {
 };
 
 module.exports = client => {
-	const interval = 2000;
+	const interval = 120000;
 	setInterval(() => monitor(client), interval);
 };

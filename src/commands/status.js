@@ -1,5 +1,6 @@
 const Discord = require('discord.js'),
-	generateTrackerEmbed = require('../tracker/generateTrackerEmbed.js'),
+	generateEmbed = require('../tracker/generateTrackerEmbed.js'),
+	utils = require('../utils.js'),
 	request = require('request'),
 	path = require('path'),
 	fs = require('fs');
@@ -14,8 +15,8 @@ module.exports = (client, message, args) => {
 
 	const { user: { username, avatarURL } } = client;
 
-	const cache = require(cachePath),
-		config = require(configPath);
+	const cache = utils.requireUncached(require, cachePath),
+		config = utils.requireUncached(require, configPath);
 
 	if(config.botBroadcastChannelID) {
 		if(channel.id !== config.botBroadcastChannelID) {
@@ -24,25 +25,43 @@ module.exports = (client, message, args) => {
 	}
 
 	if(!cache){
+		console.log('No cache file found.');
 		channel.send(NOTFOUND_MSG);
 		return;
 	}
 
 	if(tracker == "ipt") {
-		channel.send("Please donate to get access to IPT status.");
+		channel.send("Please donate for access to IPT status information.");
 		return;
 	}
 
-	const trackerStatus = cache[tracker];
+	if(tracker == "ab") {
 
-	if(!trackerStatus || !trackerStatus['Details']) {
+	}
+
+	if(tracker == "schwanz") {
+		const embed = generateEmbed(client, tracker, false, {
+			Description: "All six services online.",
+			Details: {
+				Website: "1",
+				API: "1",
+				TrackerHTTP: "1",
+				TrackerHTTPS: "1",
+				IRCServer: "1",
+				IRCTorrentAnnouncer: "1",
+			}
+		});
+		channel.send(embed);
+		return;
+	}
+
+	const trackerInfo = cache[tracker];
+
+	if(!trackerInfo || !trackerInfo['Details']) {
 		channel.send(NOTFOUND_MSG);
 		return;
 	}
 
-	trackerStatus.trackerName = tracker;
-
-	const embed = generateTrackerEmbed(client, trackerStatus);
-
+	const embed = generateEmbed(client, tracker, false, trackerInfo);
 	channel.send(embed);
 };

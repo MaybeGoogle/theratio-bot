@@ -1,9 +1,15 @@
-const fs = require('fs'),
-	TrackerModule = require('./tracker/index.js');
+const path = require('path'),
+	fs = require('fs'),
+	TrackerModule = require('./tracker/index.js'),
+	MessageReactionPollyfill = require('./messageReactionPollyfill.js');
+
+const configPath = path.join(__dirname, '../config.json'),
+	config = require(configPath);
 
 module.exports = client => {
 	client.commands = new Object();
 
+	MessageReactionPollyfill(client);
 	TrackerModule(client);
 
 	fs.readdir('./src/events', (err, files) => {
@@ -32,5 +38,5 @@ module.exports = client => {
 		});
 	});
 
-	client.login(client.config.token);
+	client.login(config.token);
 };

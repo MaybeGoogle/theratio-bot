@@ -1,29 +1,22 @@
 const Discord = require('discord.js'),
 	_ = require('lodash');
 
-module.exports = (client, trackerStatusInfo) => {
-	const { hasChanged, trackerName, Description, Details, URL } = trackerStatusInfo;
-	const title = hasChanged ? `Service status for ${trackerName.toUpperCase()} has changed:` : `Service status for ${trackerName.toUpperCase()}`;
+const trackerStatusAPIResponseEmbed = (client, trackerName, hasChanged, trackerStatusInfo) => {
+	let preMessage;
+	const { Description, Details, URL } = trackerStatusInfo,
+		title = hasChanged ? `Service status for ${trackerName.toUpperCase()} has changed:` : `Service status for ${trackerName.toUpperCase()}`;
 
-	const guild = client.guilds.first(),
-		role = guild.roles.get('name', trackerName + '-notify');
+	const embed = {
+		title,
+		description: _.capitalize(Description),
+		url: URL,
+		color: 3447003,
+		fields: []
+	};
 
-	const embed = new Discord.RichEmbed()
-		.setColor(3447003)
-		.setTitle(title)
-		.setDescription(_.capitalize(Description))
-		.setURL(URL);
-
-	if(hasChanged && role) {
-		embed
-			.addBlankField(true)
-			.addField(" ", "Paging " + role.toString())
-			.addBlankField(true);
-	}
-
-	for(let service in Details) {
+	for(let name in Details) {
 		let value;
-		const statusCode = Details[service];
+		const statusCode = Details[name];
 
 		if(statusCode === "0") {
 			value = "Offline";
@@ -33,8 +26,16 @@ module.exports = (client, trackerStatusInfo) => {
 			value = "Unstable";
 		}
 
-		embed.addField(service, value, true);
+		embed.fields.push({ name, value, inline: true });
 	}
 
 	return embed;
+};
+
+module.exports = (client, trackerName, hasChanged, trackerStatusInfo) => {
+	if(trackerName === 'ab') {
+
+	} else {
+		return trackerStatusAPIResponseEmbed(client, trackerName, hasChanged, trackerStatusInfo);
+	}
 };
