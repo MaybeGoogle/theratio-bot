@@ -5,21 +5,20 @@ const Discord = require('discord.js'),
 
 const configPath = path.join(__dirname, '../../config.json');
 
-const trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops'],
-	trackerNames = ['Alpha Ratio', 'BTN', 'GGN','MTV','NotWhatCD','PTP','Red','32 Pages','Orpheus'], 
-	roles = ['ar-notify','btn-notify','ggn-notify','mtv-notify','nwcd-notify','ptp-notify','red-notify','32p-notify','ops-notify'],
-	reactions = ['1⃣','2⃣','3⃣','4⃣','5⃣','6⃣','7⃣','8⃣','9⃣'];
+const trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops','ab'],
+	trackerNames = ['Alpha Ratio', 'BTN', 'GGN','MTV','NotWhatCD','PTP','Red','32 Pages','Orpheus','AnimeBytes'], 
+	roles = ['ar-notify','btn-notify','ggn-notify','mtv-notify','nwcd-notify','ptp-notify','red-notify','32p-notify','ops-notify','ab-notify'],
+	reactions = ['1⃣','2⃣','3⃣','4⃣','5⃣','6⃣','7⃣','8⃣','9⃣','🔟'];
 
-const roleExists = (guild, roleName) => !!guild.roles.find(role => role.name === roleName);
-
-const generateEmbedFields = () => trackers.map((tracker, index) => {
-	return {
-		tracker,
-		role: roles[index],
-		reaction: reactions[index],
-		trackerName: trackerNames[index]
-	};
-});
+const roleExists = (guild, roleName) => !!guild.roles.find(role => role.name === roleName),
+	generateEmbedFields = () => trackers.map((tracker, index) => {
+		return {
+			tracker,
+			role: roles[index],
+			reaction: reactions[index],
+			trackerName: trackerNames[index]
+		};
+	});
 
 module.exports = (client, message, args) => {
 	const { channel } = message,
@@ -29,7 +28,7 @@ module.exports = (client, message, args) => {
 	if(!isAdmin) return;
 
 	if(!config.botNotificationRoleChannelID) {
-		channel.send('Bot notification channel ID not set');
+		console.log('Bot notification channel ID not set');
 		return;
 	}
 

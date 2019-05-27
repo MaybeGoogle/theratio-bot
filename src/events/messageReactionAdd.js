@@ -5,8 +5,8 @@ const path = require('path'),
 
 const configPath = path.join(__dirname, '../../config.json');
 
-const roles = ['ar-notify','btn-notify','ggn-notify','mtv-notify','nwcd-notify','ptp-notify','red-notify','32p-notify','ops-notify'],
-	reactions = ['1⃣','2⃣','3⃣','4⃣','5⃣','6⃣','7⃣','8⃣','9⃣'];
+const roles = ['ar-notify','btn-notify','ggn-notify','mtv-notify','nwcd-notify','ptp-notify','red-notify','32p-notify','ops-notify','ab-notify'],
+	reactions = ['1⃣','2⃣','3⃣','4⃣','5⃣','6⃣','7⃣','8⃣','9⃣','🔟'];
 
 module.exports = (thing, reaction, user) => {
 	const { message } = reaction;

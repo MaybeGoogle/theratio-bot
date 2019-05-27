@@ -1,5 +1,6 @@
 const Discord = require('discord.js'),
 	generateEmbed = require('../tracker/generateTrackerEmbed.js'),
+	generateAnimeBytesEmbed = require('../tracker/generateAnimeBytesEmbed.js'),
 	utils = require('../utils'),
 	path = require('path'),
 	fs = require('fs');
@@ -34,13 +35,8 @@ module.exports = (client, message, args) => {
 
 	if(tracker == "ab") {
 		const abCache = utils.requireUncached(require, abCachePath),
-			embed = generateEmbed('AnimeBytes', false, {
-				Details: {
-					Website: abCache['site_status'],
-					Tracker: abCache['tracker_status'],
-					IRCServer: abCache['irc_status']
-				}
-			});
+			embed = generateAnimeBytesEmbed(false, abCache);
+
 		channel.send({ embed });
 		return;
 	}
