@@ -1,7 +1,7 @@
 const path = require('path'),
 	fs = require('fs'),
 	TrackerModule = require('./tracker/index.js'),
-	MessageReactionPollyfill = require('./messageReactionPollyfill.js');
+	MessageReactionPollyfill = require('./utils/messageReactionPollyfill.js');
 
 const configPath = path.join(__dirname, '../config.json'),
 	config = require(configPath);

@@ -1,21 +1,19 @@
 const Discord = require('discord.js'),
 	generateEmbed = require('../tracker/generateTrackerEmbed.js'),
-	utils = require('../utils.js'),
-	request = require('request'),
+	utils = require('../utils'),
 	path = require('path'),
 	fs = require('fs');
 
 const configPath = path.join(__dirname, '../../config.json'),
 	cachePath = path.join(__dirname, '../../cache.json'),
+	abCachePath = path.join(__dirname, '../../ab.cache.json'),
 	NOTFOUND_MSG = "Could not find information for that tracker. Please try again.";
 
 module.exports = (client, message, args) => {
-	const { channel } = message,
-		tracker = args[0];
-
-	const { user: { username, avatarURL } } = client;
-
-	const cache = utils.requireUncached(require, cachePath),
+	const { user: { username, avatarURL } } = client,
+		{ channel } = message,
+		tracker = args[0],
+		cache = utils.requireUncached(require, cachePath),
 		config = utils.requireUncached(require, configPath);
 
 	if(config.botBroadcastChannelID) {
@@ -26,7 +24,6 @@ module.exports = (client, message, args) => {
 
 	if(!cache){
 		console.log('No cache file found.');
-		channel.send(NOTFOUND_MSG);
 		return;
 	}
 
@@ -36,11 +33,20 @@ module.exports = (client, message, args) => {
 	}
 
 	if(tracker == "ab") {
-
+		const abCache = utils.requireUncached(require, abCachePath),
+			embed = generateEmbed('AnimeBytes', false, {
+				Details: {
+					Website: abCache['site_status'],
+					Tracker: abCache['tracker_status'],
+					IRCServer: abCache['irc_status']
+				}
+			});
+		channel.send({ embed });
+		return;
 	}
 
 	if(tracker == "schwanz") {
-		const embed = generateEmbed(client, tracker, false, {
+		const embed = generateEmbed(tracker, false, {
 			Description: "All six services online.",
 			Details: {
 				Website: "1",
@@ -51,7 +57,7 @@ module.exports = (client, message, args) => {
 				IRCTorrentAnnouncer: "1",
 			}
 		});
-		channel.send(embed);
+		channel.send({ embed });
 		return;
 	}
 
@@ -62,6 +68,6 @@ module.exports = (client, message, args) => {
 		return;
 	}
 
-	const embed = generateEmbed(client, tracker, false, trackerInfo);
-	channel.send(embed);
+	const embed = generateEmbed(tracker.toUpperCase(), false, trackerInfo);
+	channel.send({ embed });
 };

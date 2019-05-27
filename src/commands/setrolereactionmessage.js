@@ -1,5 +1,5 @@
 const Discord = require('discord.js'),
-	utils = require('../utils.js'),
+	utils = require('../utils'),
 	path = require('path'),
 	fs = require('fs');
 

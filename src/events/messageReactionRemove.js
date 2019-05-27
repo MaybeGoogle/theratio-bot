@@ -1,7 +1,7 @@
 const path = require('path'),
 	fs = require('fs'),
 	_ = require('lodash'),
-	utils = require('../utils.js');
+	utils = require('../utils');
 
 const configPath = path.join(__dirname, '../../config.json');
 
