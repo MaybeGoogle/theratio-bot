@@ -18,8 +18,8 @@ module.exports = client => {
 		files.forEach(filename => {
 			if (!filename.endsWith('.js')) return;
 
-			const event = require(`./events/${filename}`);
-			const eventName = filename.split(".")[0];
+			const event = require(`./events/${filename}`),
+				eventName = filename.split(".")[0];
 
 			client.on(eventName, event.bind(null, client));
 		});
