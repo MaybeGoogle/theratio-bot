@@ -104,7 +104,13 @@ const CountMessageUpdateEvent = async (client, oldMessage, newMessage) => {
 		oldNumber = getNumberFromMessageText(oldMessage.content);
 
 	if(newNumber != oldNumber) {
-		newMessage.delete();
+		const response = await channel.send("Don't edit the number...");
+		setTimeout(async () => {
+			await newMessage.delete();
+		}, 1000);
+		setTimeout(async () => {
+			await response.delete();	
+		}, 1200);
 	}
 };
 
