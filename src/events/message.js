@@ -3,11 +3,11 @@ const config = require('../../config.json');
 module.exports = (client, message) => {
 	const { author, content, channel } = message;
 	
-	if (author.bot) {
+	if(author.bot) {
 		return;
 	}
 
-	if (content.indexOf(config.prefix) !== 0) {
+	if(content.indexOf(config.prefix) !== 0) {
 		return;
 	}
 

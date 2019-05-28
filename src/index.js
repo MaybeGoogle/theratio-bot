@@ -1,5 +1,6 @@
 const path = require('path'),
 	fs = require('fs'),
+	CountingModule = require('./counting/index.js'),
 	TrackerModule = require('./tracker/index.js'),
 	MessageReactionPollyfill = require('./utils/messageReactionEventPollyfill.js');
 
@@ -9,6 +10,7 @@ const configPath = path.join(__dirname, '../config.json'),
 module.exports = client => {
 	client.commands = new Object();
 
+	CountingModule(client);
 	MessageReactionPollyfill(client);
 	TrackerModule(client);
 

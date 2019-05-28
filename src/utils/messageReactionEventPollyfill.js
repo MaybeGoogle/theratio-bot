@@ -14,8 +14,11 @@ module.exports = client => {
 		// if the message is already in the cache, don't re-emit the event
 		if(channel.messages.has(data.message_id)) return;
 
-		const message = await channel.fetchMessage(data.message_id),
-			emojiKey = (data.emoji.id) ? `${data.emoji.name}:${data.emoji.id}` : data.emoji.name,
+		const message = await channel.fetchMessage(data.message_id);
+
+		if(!message) return;
+		
+		const emojiKey = (data.emoji.id) ? `${data.emoji.name}:${data.emoji.id}` : data.emoji.name,
 			reaction = message.reactions.get(emojiKey);
 
 		reaction.message = message;
