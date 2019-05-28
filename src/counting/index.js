@@ -96,7 +96,7 @@ const CountMessageUpdateEvent = async (client, oldMessage, newMessage) => {
 		return;
 	}
 
-	if(!countChannelID || channel.id !== countChannelID) {
+	if(!countChannelID || channel.id != countChannelID) {
 		return;
 	}
 
@@ -104,7 +104,7 @@ const CountMessageUpdateEvent = async (client, oldMessage, newMessage) => {
 		oldNumber = getNumberFromMessageText(oldMessage.content);
 
 	if(newNumber != oldNumber) {
-		message.delete();
+		newMessage.delete();
 	}
 };
 
