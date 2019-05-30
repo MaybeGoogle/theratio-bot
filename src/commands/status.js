@@ -24,12 +24,12 @@ module.exports = (client, message, args) => {
 	}
 
 	if(!cache){
-		console.log('No cache file found.');
+		console.log(utils.generateErrorEmbed('No cache file found.'));
 		return;
 	}
 
 	if(tracker == "ipt") {
-		channel.send("Please donate for access to IPT status information.");
+		channel.send(utils.generateErrorEmbed("Please donate for access to IPT status information."));
 		return;
 	}
 

@@ -1,5 +1,7 @@
 const path = require('path'),
 	fs = require('fs'),
+	mongoose = require('mongoose'),
+	UserModule = require('./users/index.js'),
 	CountingModule = require('./counting/index.js'),
 	TrackerModule = require('./tracker/index.js'),
 	MessageReactionPollyfill = require('./utils/messageReactionEventPollyfill.js');
@@ -7,38 +9,50 @@ const path = require('path'),
 const configPath = path.join(__dirname, '../config.json'),
 	config = require(configPath);
 
+const databaseName = 'theratio',
+	mongoURL = 'mongodb://localhost:27017';
+
 module.exports = client => {
-	client.commands = new Object();
+	mongoose.connect('mongodb://localhost/theratio', { useNewUrlParser: true });
 
-	CountingModule(client);
-	MessageReactionPollyfill(client);
-	TrackerModule(client);
+	const database = mongoose.connection;
 
-	fs.readdir('./src/events', (err, files) => {
-		if (err) return console.log(err);
+	database.on('error', console.error.bind(console, 'connection error:'));
 
-		files.forEach(filename => {
-			if (!filename.endsWith('.js')) return;
+	database.on('open', () => {
+		client.commands = new Object();
 
-			const event = require(`./events/${filename}`),
-				eventName = filename.split(".")[0];
+		UserModule(client);
+		CountingModule(client);
+		MessageReactionPollyfill(client);
+		TrackerModule(client);
 
-			client.on(eventName, event.bind(null, client));
+		fs.readdir('./src/events', (err, files) => {
+			if (err) return console.log(err);
+
+			files.forEach(filename => {
+				if (!filename.endsWith('.js')) return;
+
+				const event = require(`./events/${filename}`),
+					eventName = filename.split(".")[0];
+
+				client.on(eventName, event.bind(null, client));
+			});
 		});
-	});
 
-	fs.readdir('./src/commands', (err, files) => {
-		if (err) return console.log(err);
+		fs.readdir('./src/commands', (err, files) => {
+			if (err) return console.log(err);
 
-		files.forEach(filename => {
-			if (!filename.endsWith('.js')) return;
+			files.forEach(filename => {
+				if (!filename.endsWith('.js')) return;
 
-			const command = require(`./commands/${filename}`),
-				commandName = filename.split(".")[0];
-				
-			client.commands[commandName] = command;
+				const command = require(`./commands/${filename}`),
+					commandName = filename.split(".")[0];
+					
+				client.commands[commandName] = command;
+			});
 		});
-	});
 
-	client.login(config.token);
+		client.login(config.token);
+	});
 };

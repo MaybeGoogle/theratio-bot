@@ -1,4 +1,5 @@
-const utils = require('../utils'),
+const fs = require('fs'),
+	utils = require('../utils'),
 	path = require('path');
 
 const greenEmoji = '✅',
@@ -44,9 +45,9 @@ const CountMessageReceiveEvent = async (client, message) => {
 					const reaction = message.react(redEmoji),
 						reply = await channel.send('You must start with the number 1. Do you even understand how this game works?');
 
-					setTimeout(() => {
-						message.delete();
-						reply.delete();
+					setTimeout(async () => {
+						await message.delete();
+						await reply.delete();
 					}, 3000);
 				} catch(error) {
 					console.log(error);
@@ -60,30 +61,59 @@ const CountMessageReceiveEvent = async (client, message) => {
 		}
 
 		if(author.id == previousMessage.author.id) {
-			message.delete();
+			await message.delete();
 			return;
 		}
 
 		const previousNumber = getNumberFromMessageText(previousMessage.content);
 
 		if(String(previousNumber)[0] == '-') {
-			previousMessage.delete();
+			await previousMessage.delete();
 		}
 
 		if(!previousNumber) {
-			previousMessage.delete();
-			message.delete();
+			await previousMessage.delete();
+			await message.delete();
 			return;
 		}
 
 		if(number === (previousNumber + 1)) {
-			message.react(greenEmoji);
+			if(author.id == config.lastCountUserId) {
+				await message.delete();
+				return;
+			}
+
+			await message.react(greenEmoji);
+
+			try {
+				let user = await client.User.findOne({ userId: author.id }).exec();
+
+				if(user) {
+					user.wallet = user.wallet + 5;
+					user.numberOfCounts = user.numberOfCounts + 1;
+
+					await user.save();
+				} else {
+					user = new client.User({
+						userId: author.id,
+						wallet: 5,
+						numberOfCounts: 1
+					});
+
+					await user.save();
+				}
+
+				config.lastCountUserId = author.id;
+				fs.writeFileSync(configPath, JSON.stringify(config), { encoding: 'utf8' });
+			} catch(error) {
+				console.log(error);
+			}
 		} else {
-			message.delete();
+			await message.delete();
 		}
 
 	} catch(error) {
-
+		console.log(error);
 	}
 };
 
@@ -104,13 +134,7 @@ const CountMessageUpdateEvent = async (client, oldMessage, newMessage) => {
 		oldNumber = getNumberFromMessageText(oldMessage.content);
 
 	if(newNumber != oldNumber) {
-		const response = await channel.send("Don't edit the number...");
-		setTimeout(async () => {
-			await newMessage.delete();
-		}, 1000);
-		setTimeout(async () => {
-			await response.delete();	
-		}, 1200);
+		await newMessage.delete();
 	}
 };
 

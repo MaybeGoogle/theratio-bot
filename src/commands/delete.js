@@ -1,4 +1,5 @@
-const Discord = require('discord.js');
+const Discord = require('discord.js'),
+	utils = require('../utils');
 
 module.exports = async (client, message, args) => {
 	let error;
@@ -22,11 +23,19 @@ module.exports = async (client, message, args) => {
 	}
 
 	if(error) {
-		const response = await channel.send(error);
-		setTimeout(async () => await response.delete(), 2000);
+		try {
+			const response = await channel.send(utils.generateErrorEmbed(error));
+			setTimeout(async () => await response.delete(), 2000);
+		} catch(error) {
+			console.log(error);
+		}
 		return;
 	}
 
-	await message.delete();
-	await channel.bulkDelete(count);
+	try {
+		await message.delete();
+		await channel.bulkDelete(count);
+	} catch(error) {
+		console.log(error);
+	}
 };

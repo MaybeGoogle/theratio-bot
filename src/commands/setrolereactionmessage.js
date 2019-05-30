@@ -56,7 +56,11 @@ module.exports = (client, message, args) => {
 		message.delete();
 
 		for(const reaction of reactions) {
-			await sentMessage.react(reaction);
+			try {
+				await sentMessage.react(reaction);
+			} catch(error) {
+				console.log(error);
+			}
 		}
 
 		config.botNotificationRoleMessageID = sentMessage.id;
