@@ -1,13 +1,13 @@
 const Discord = require('discord.js'),
-	generateEmbed = require('../tracker/generateTrackerEmbed.js'),
-	generateAnimeBytesEmbed = require('../tracker/generateAnimeBytesEmbed.js'),
-	utils = require('../utils'),
+	generateEmbed = require('../utils/generateTrackerEmbed.js'),
+	generateAnimeBytesEmbed = require('../utils/generateAnimeBytesEmbed.js'),
+	utils = require('../../../utils'),
 	path = require('path'),
 	fs = require('fs');
 
-const configPath = path.join(__dirname, '../../config.json'),
-	cachePath = path.join(__dirname, '../../cache.json'),
-	abCachePath = path.join(__dirname, '../../ab.cache.json'),
+const configPath = path.join(__dirname, '../../../../config.json'),
+	cachePath = path.join(__dirname, '../../../../cache.json'),
+	abCachePath = path.join(__dirname, '../../../../ab.cache.json'),
 	NOTFOUND_MSG = "Could not find information for that tracker. Please try again.";
 
 module.exports = (client, message, args) => {

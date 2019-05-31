@@ -1,7 +1,7 @@
 const path = require('path'),
-	utils = require('../utils');
+	utils = require('../../../utils');
 
-const configPath = path.join(__dirname, '../../config.json');
+const configPath = path.join(__dirname, '../../../../config.json');
 
 module.exports = async (client, message, args) => {
 	const { channel, member, guild } = message,
@@ -9,25 +9,25 @@ module.exports = async (client, message, args) => {
 		isAdmin = message.member.hasPermission('ADMINISTRATOR');
 
 	let recipient,
-		awardAmount = args[0],
+		deductAmount = args[0],
 		username = args[1],
 		mentionedUser = message.mentions.members.first();
 
 	if(!isAdmin) return;
 
 	if(args.length !== 2) {
-		channel.send(utils.generateErrorEmbed('.award command requires two arguments: a username and the amount of RatioBucks to award.'));
+		channel.send(utils.generateErrorEmbed('.deduct command requires two arguments: a username and the amount of RatioBucks to deduct.'));
 		return;
 	}
 
-	awardAmount = parseInt(awardAmount);
+	deductAmount = parseInt(deductAmount);
 
-	if(awardAmount <= 0) {
-		channel.send(utils.generateErrorEmbed('You must award a positive number of RatioBucks'));
+	if(deductAmount <= 0) {
+		channel.send(utils.generateErrorEmbed('You must deduct a positive number of RatioBucks'));
 		return;
 	}
 
-	if(!utils.isPositiveInteger(awardAmount)) {
+	if(!utils.isPositiveInteger(deductAmount)) {
 		channel.send(utils.generateErrorEmbed('You must provide a valid number of RatioBucks'));
 		return;
 	}
@@ -55,14 +55,18 @@ module.exports = async (client, message, args) => {
 		return;
 	}
 
-	recipientUser.wallet = recipientUser.wallet + awardAmount;
+	if((recipientUser.wallet - deductAmount) < 0) {
+		deductAmount = recipientUser.wallet;
+	}
+
+	recipientUser.wallet = recipientUser.wallet - deductAmount;
 
 	await recipientUser.save();
 
 	await channel.send({
 		embed: {
 			color: 0x0099ff,
-			description: `Awarded $${awardAmount} RatioBucks to ${recipient.displayName}`
+			description: `deducted $${deductAmount} RatioBucks to ${recipient.displayName}`
 		}
 	});
 };

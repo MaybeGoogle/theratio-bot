@@ -1,5 +1,5 @@
 const Discord = require('discord.js'),
-	utils = require('../utils');
+	utils = require('../../../utils');
 
 module.exports = async (client, message, args) => {
 	let error;

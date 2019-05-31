@@ -1,11 +1,11 @@
 const fs = require('fs'),
-	utils = require('../utils'),
+	utils = require('../../utils'),
 	path = require('path');
+
+const configPath = path.join(__dirname, '../../../config.json');
 
 const greenEmoji = '✅',
 	redEmoji = '❌';
-
-const configPath = path.join(__dirname, '../../config.json');
 
 const getNumberFromMessageText = text => {
 	const count = text.trim().split(/ +/g).shift();
@@ -89,14 +89,14 @@ const CountMessageReceiveEvent = async (client, message) => {
 				let user = await client.User.findOne({ userId: author.id }).exec();
 
 				if(user) {
-					user.wallet = user.wallet + 5;
+					user.wallet = user.wallet + utils.random(1, 5);
 					user.numberOfCounts = user.numberOfCounts + 1;
 
 					await user.save();
 				} else {
 					user = new client.User({
 						userId: author.id,
-						wallet: 5,
+						wallet: utils.random(1, 5),
 						numberOfCounts: 1
 					});
 

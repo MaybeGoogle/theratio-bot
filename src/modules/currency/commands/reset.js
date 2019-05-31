@@ -1,4 +1,4 @@
-const utils = require('../utils/index.js');
+const utils = require('../../../utils');
 
 module.exports = async (client, message, args) => {
 	const { channel, member, guild } = message,

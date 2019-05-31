@@ -1,8 +1,8 @@
 const asyncLib = require('async'),
 	path = require('path'),
-	utils = require('../utils/index.js');
+	utils = require('../../../utils');
 
-const configPath = path.join(__dirname, '../../config.json');
+const configPath = path.join(__dirname, '../../../../config.json');
 
 module.exports = async (client, message, args) => {
 	const { channel, guild } = message,

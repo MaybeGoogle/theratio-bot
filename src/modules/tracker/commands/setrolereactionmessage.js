@@ -1,9 +1,9 @@
 const Discord = require('discord.js'),
-	utils = require('../utils'),
+	utils = require('../../../utils'),
 	path = require('path'),
 	fs = require('fs');
 
-const configPath = path.join(__dirname, '../../config.json');
+const configPath = path.join(__dirname, '../../../../config.json');
 
 const trackers = ['ar','btn','ggn','mtv','nwcd','ptp','red','32p','ops','ab'],
 	trackerNames = ['Alpha Ratio', 'BTN', 'GGN','MTV','NotWhatCD','PTP','Red','32 Pages','Orpheus','AnimeBytes'], 

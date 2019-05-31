@@ -2,13 +2,13 @@ const path = require('path'),
 	fs = require('fs'),
 	_ = require('lodash');
 	request = require('request-promise-native'),
-	generateEmbed = require('./generateTrackerEmbed.js'),
-	generateAnimeBytesEmbed = require('./generateAnimeBytesEmbed.js'),
-	utils = require('../utils');
+	generateEmbed = require('./utils/generateTrackerEmbed.js'),
+	generateAnimeBytesEmbed = require('./utils/generateAnimeBytesEmbed.js'),
+	utils = require('../../utils');
 	
-const configPath = path.join(__dirname, '../../config.json'),
-	cachePath = path.join(__dirname, '../../cache.json'),
-	abCachePath = path.join(__dirname, '../../ab.cache.json');
+const configPath = path.join(__dirname, '../../../config.json'),
+	cachePath = path.join(__dirname, '../../../cache.json'),
+	abCachePath = path.join(__dirname, '../../../ab.cache.json');
 
 const monitor = async client => {
 	const config = utils.requireUncached(require, configPath),
