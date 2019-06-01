@@ -13,7 +13,7 @@ module.exports = async (client, message, args) => {
 		return;
 	}
 
-	const users = await client.User.find().sort({ wallet: -1 }).limit(10).exec();
+	const users = await client.db.User.find().sort({ wallet: -1 }).limit(10).exec();
 
 	if(!users.length) {
 		channel.send(utils.generateErrorEmbed('Not enough user data'));
@@ -40,10 +40,10 @@ module.exports = async (client, message, args) => {
 			});
 
 			index++;
+			return callback();
 		} catch(error) {
-
+			return callback();
 		}
-
 	}, async (err, result) => {
 		await channel.send({ embed });
 	});

@@ -22,7 +22,7 @@ module.exports = async (client, message, args) => {
 		return;
 	}
 	
-	const recipientUser = await client.User.findOne({ userId: recipient.id }).exec();
+	const recipientUser = await client.db.User.findOne({ userId: recipient.id }).exec();
 
 	if(!recipientUser) {
 		channel.send(utils.generateErrorEmbed(`Could not find wallet information for ${recipient.displayName}`));

@@ -4,6 +4,8 @@ const path = require('path'),
 	request = require('request-promise-native'),
 	generateEmbed = require('./utils/generateTrackerEmbed.js'),
 	generateAnimeBytesEmbed = require('./utils/generateAnimeBytesEmbed.js'),
+	trackerInfoHasChanged = require('./utils/index.js').trackerInfoHasChanged,
+	abInfoHasChanged = require('./utils/index.js').abInfoHasChanged,
 	utils = require('../../utils');
 	
 const configPath = path.join(__dirname, '../../../config.json'),
@@ -24,7 +26,7 @@ const monitor = async client => {
 
 			if(!json) return;
 
-			if(utils.abInfoHasChanged(json, previousCache)) {
+			if(abInfoHasChanged(json, previousCache)) {
 				const embedInfo = _.clone(json);
 
 				if(channel) {
@@ -63,7 +65,7 @@ const monitor = async client => {
 
 				if(!tracker || !cachedTrackerInfo) return;
 
-				if(utils.trackerInfoHasChanged(trackerInfo.Details, cachedTrackerInfo.Details)) {
+				if(trackerInfoHasChanged(trackerInfo.Details, cachedTrackerInfo.Details)) {
 					const embedInfo = _.clone(trackerInfo);
 
 					if(channel) {

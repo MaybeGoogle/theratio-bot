@@ -8,15 +8,14 @@ module.exports = async (client, message, args) => {
 		config = utils.requireUncached(require, configPath),
 		isAdmin = message.member.hasPermission('ADMINISTRATOR');
 
-	let recipient,
-		awardAmount = args[0],
-		username = args[1],
-		mentionedUser = message.mentions.members.first();
+	let awardAmount = args[0],
+		recipientArg = args[1],
+		recipient = message.mentions.members.first();
 
 	if(!isAdmin) return;
 
 	if(args.length !== 2) {
-		channel.send(utils.generateErrorEmbed('.award command requires two arguments: a username and the amount of RatioBucks to award.'));
+		channel.send(utils.generateErrorEmbed('.award command requires two arguments: the amount of RatioBucks to award and a user mention.'));
 		return;
 	}
 
@@ -32,14 +31,8 @@ module.exports = async (client, message, args) => {
 		return;
 	}
 
-	if(mentionedUser) {
-		recipient = mentionedUser;
-	} else {
-		recipient = await guild.members.find(user => user.displayName.toLowerCase() == username.toLowerCase()); 
-	}
-
 	if(!recipient) {
-		channel.send(utils.generateErrorEmbed(`Could not find user ${username}`));
+		channel.send(utils.generateErrorEmbed(`Could not find user ${recipientArg}`));
 		return;
 	}
 
@@ -48,7 +41,7 @@ module.exports = async (client, message, args) => {
 		return;
 	}
 	
-	const recipientUser = await client.User.findOne({ userId: recipient.id }).exec();
+	const recipientUser = await client.db.User.findOne({ userId: recipient.id }).exec();
 
 	if(!recipientUser) {
 		channel.send(utils.generateErrorEmbed(`Could not find wallet information for ${recipient.displayName}`));

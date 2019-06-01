@@ -86,7 +86,7 @@ const CountMessageReceiveEvent = async (client, message) => {
 			await message.react(greenEmoji);
 
 			try {
-				let user = await client.User.findOne({ userId: author.id }).exec();
+				let user = await client.db.User.findOne({ userId: author.id }).exec();
 
 				if(user) {
 					user.wallet = user.wallet + utils.random(1, 5);
@@ -94,7 +94,7 @@ const CountMessageReceiveEvent = async (client, message) => {
 
 					await user.save();
 				} else {
-					user = new client.User({
+					user = new client.db.User({
 						userId: author.id,
 						wallet: utils.random(1, 5),
 						numberOfCounts: 1

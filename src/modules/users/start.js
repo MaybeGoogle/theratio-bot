@@ -4,10 +4,11 @@ module.exports = client => {
 	const userSchema = new mongoose.Schema({
 		userId: String,
 		wallet: Number,
-		numberOfCounts: Number
+		numberOfCounts: Number,
+		purchasedRoles: [{ name: String }]
 	});
 
 	const User = mongoose.model('User', userSchema);
 
-	client.User = User;
+	client.db.User = User;
 };

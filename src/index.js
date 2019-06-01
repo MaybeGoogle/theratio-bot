@@ -5,6 +5,7 @@ const path = require('path'),
 	CountingModule = require('./modules/counting'),
 	CurrencyModule = require('./modules/currency'),
 	GamesModule = require('./modules/games'),
+	StoreModule = require('./modules/store'),
 	HelpModule = require('./modules/help'),
 	TrackerModule = require('./modules/tracker'),
 	UsersModule = require('./modules/users');
@@ -12,7 +13,7 @@ const path = require('path'),
 
 const configPath = path.join(__dirname, '../config.json'),
 	config = require(configPath),
-	modules = [UserModule, AdminModule, CountingModule, CurrencyModule, GamesModule, MessageReactionPollyfill, TrackerModule],
+	modules = [UserModule, AdminModule, CountingModule, CurrencyModule, GamesModule, StoreModule, HelpModule, MessageReactionPollyfill, TrackerModule],
 	databaseName = 'theratio',
 	mongoURL = 'mongodb://localhost:27017';
 
@@ -23,6 +24,7 @@ module.exports = client => {
 
 	mongoose.connection.on('open', () => {
 		client.commands = new Object();
+		client.db = new Object();
 
 		modules.forEach(module => module(client));
 

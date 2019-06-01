@@ -1,6 +1,12 @@
 {
-	"token": "",
-	"prefix": ".",
-	"botBroadcastChannelID": "",
-	"botNotificationRoleChannelID": ""
+	"token":"",
+	"prefix":".",
+	"botBroadcastChannelID":"",
+	"botNotificationBroadcastChannelID":"",
+	"botNotificationRoleChannelID":"",
+	"botNotificationRoleMessageID":"",
+	"botNotificationGuildID":"",
+	"countChannelID":"",
+	"lastCountUserId":"",
+	"countSpamChannelID":""
 }
