@@ -63,5 +63,10 @@ module.exports = async (client, message, args) => {
 
 	await recipientUser.save();
 
-	await channel.send(utils.generateSuccessEmbed(`deducted $${deductAmount} RatioBucks to ${recipient.displayName}`));
+	await channel.send({
+		embed: {
+			color: 0x0099ff,
+			description: `deducted $${deductAmount} RatioBucks to ${recipient.displayName}`
+		}
+	});
 };

@@ -2,6 +2,10 @@ const Discord = require('discord.js'),
 	utils = require('../../../../utils');
 
 const subcommands = {
+	'counting': require('./counting.js'),
+	'currency': require('./currency.js'),
+	'store': require('./store.js'),
+	'tracker': require('./tracker.js')
 };
 
 const getDescription = () => {

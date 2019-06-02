@@ -46,7 +46,12 @@ module.exports = (client, message, args) => {
 
 	for(const field of fields) {
 		if(!roleExists(message.guild, field.role)) {
-			throw `The role ${field.role} does not exist!;`
+			//throw `The role ${field.role} does not exist!;`
+			message.guild.createRole({
+				name: field.role,
+			})
+				.then(role => console.log(`Created new role with name ${role.name} because none existed.`))
+				.catch(console.error)
 		}
 
 		embed.addField(field.trackerName, field.reaction, true);
