@@ -18,7 +18,7 @@ module.exports = async (client, message, args) => {
 	const recipient = await guild.members.find(user => user.displayName.toLowerCase() == username.toLowerCase());
 
 	if(!recipient) {
-		channel.send(`Could not find user ${username}`);
+		channel.send(utils.generateErrorEmbed(`Could not find user ${username}`));
 		return;
 	}
 	
@@ -33,5 +33,5 @@ module.exports = async (client, message, args) => {
 
 	await recipientUser.save();
 
-	await channel.send(`Successfully reset ${recipient.displayName}s wallet to 5`);
+	await channel.send(utils.generateSuccessEmbed(`Successfully reset ${recipient.displayName}s wallet to 5`));
 };

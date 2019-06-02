@@ -16,6 +16,15 @@ exports.generateErrorEmbed = error => {
 	};
 };
 
+exports.generateSuccessEmbed = description => {
+	return {
+		embed: {
+			color: 0x0099ff,
+			description
+		}
+	};
+};
+
 exports.random = (min, max) => {
     return Math.floor(Math.random() * (max-min + 1) + min);
 };

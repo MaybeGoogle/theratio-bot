@@ -29,11 +29,6 @@ module.exports = async (client, message, args) => {
 			await user.save();
 		}
 
-		const embed = {
-			color: 0x0099ff,
-			description: `${member.displayName} has $${user.wallet} RatioBucks`
-		};
-
-		channel.send({ embed });
+		channel.send(utils.generateSuccessEmbed(`${member.displayName} has $${user.wallet} RatioBucks`));
 	}
 };
